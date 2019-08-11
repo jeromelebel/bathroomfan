@@ -61,9 +61,9 @@ https://www.amazon.fr/gp/product/B00DL4BMVS
 
 ## 3D Model
 To be able to print correctly the fan case, the model has been divided into 3 pieces: 
-- the tube for the exhaust fan
-- the case itself
-- the lid
+- the [pipe](3D/pipe.stl) for the exhaust fan
+- the [lid](3D/lid.stl)
+- the [case](3D/case.stl) itself
 
 The tube and the case have been glued with hot glue so it can be detached later if needed.
 I wanted to screw the lid to the case, but it is not useful. I also wanted to use small magnets to keep the filter, but it is not needed either.
