@@ -60,6 +60,9 @@ https://www.amazon.fr/NeoPixel-Stick-WS2812-Integrated-Drivers/dp/B00KLBTT1E
 https://www.amazon.fr/gp/product/B00DL4BMVS
 
 ## 3D Model
+
+![](3D/all.png)
+
 To be able to print correctly the fan case, the model has been divided into 3 pieces: 
 - the [pipe](3D/pipe.stl) for the exhaust fan
 - the [lid](3D/lid.stl)
