@@ -35,7 +35,7 @@ public:
     PixelColors pixelColors() const { return _pixelColors; };
 
   private:
-    long _duration;
+    unsigned long _duration;
     unsigned long _startDate;
     bool _started;
     PixelColors _pixelColors;
