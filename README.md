@@ -1,23 +1,30 @@
 # Quiet Bathroom Fan
+
 ## Goal
+
 My goal was to create a bathroom fan that would be very quiet and would be easy to clean. Removing the dust helps to keep the fan quiet.
 The fan needed to be speed controlled, so the humidity could be removed quickly after a shower, and the rest of the time the air would not be renewed too fast (to avoid losing heat during winter, to be the quietest possible the rest of the time).
+
 ## Description
+
 ### Fan
+
 This project started when I found out how quiet a good PC fan can be. So it was obvious for me to use a PC fan for that project. I chose 120mm fan, that size fits perfectly the hole in my bathroom wall.
 A PC fan was also a perfect choice because most of the can be controlled with a PWM signal.
 
 One of the concerns could be the humidity and the fan. I don’t think it will be a problem in the long term, since the goal of this project is to remove humidity. If the fan fails too quickly, I will change it for a model that can support more humidity (IP52 or even IP 67).
 
 I went with a Noctua one as it has a good reputation, but other brands would work fine too. It is not clear which model is the best. Of course, the noise and the airflow speed are important parameters, but it seems that the static pressure should be important too (in case the wind tries to blow air in the opposite direction).
-The NF-A12x25 PWM or NF-F12 PWM seem to be a good compromises.
+The NF-A12x25 PWM or NF-F12 PWM seem to be a good compromises. After testing the NF-F12 PWM, I finally got the NF-f12 PPC-3000 PWM. It looks like the exact same design than NF-F12 PWM, but it can run twice faster.
 
 One important part is that kind of PC fan uses 12V.
 
 ### Case
+
 I went for the simplest way to get something that fits exactly the need: 3D printing. I used OpenSCAD software. I know how to use it and that is definitely a good solution for that kind of project.
 
 ### Microcontroller
+
 There are a lot of possible choices. I prefered to have a wifi microcontroller, to get temperature and humidity monitoring. That’s definitely not a requirement. Any small arduino like should work fine.
 The extra feature was to be able to upload a new firmware without a USB cable. I knew I would adjust a lot the software at the beginning. I wanted to avoid having a USB cable hanging, or worse, having to open and close the fan box too often.
 I think the popular ESP32 could be a good choice. But, in the past, I used few Particle Photon, so I used it again for that project.
@@ -25,10 +32,13 @@ I think the popular ESP32 could be a good choice. But, in the past, I used few P
 With most of choices, 5V is needed to power the microcontroller (even if it works in 3.3V for input/output).
 
 ### Voltage
+
 The big issue of this project is the voltage. This project has to be connected to 230V. Be aware, this can be very dangerous, and a mistake can be deadly.
 Since the fan needs 12V, I chose to get from 230V to 12V, and then convert the 12V into 5V for the microcontroller.
+The microcontroller inputs and outputs work in 3.3V. So I used the 3.3V from the microcontroller to power the pull-up resistors and the sensors (like the DHT22).
 
 ### Sensors
+
 Of course a humidity sensor is needed. I choose a basic one : DHT22. Since it is always easier to add stuff during design than once the project is finished. I also added:
 PIR sensor
 light sensor
@@ -36,10 +46,12 @@ One of my ideas is to reduce a little the fan speed when nobody is inside the ba
 All 3 sensors can work in 3.3V
 
 ### LEDs
+
 I knew I would spend time to adjust my software according to the humidity and the fan noise. To avoid having to use my laptop/phone to get values about the fan speed and humidity, I chose to add 8 NeoPixels from Adafruit. The goal is to display those values and have a quick look, so I can understand what is going on.
 And also because it looks cool :).
 
 ### Components
+
 - 240V to 12V
 https://www.amazon.fr/gp/product/B017R4INRI/
 - 12V to 5V
@@ -69,7 +81,7 @@ To be able to print correctly the fan case, the model has been divided into 3 pi
 - the [case](3D/case.stl) itself
 - the [LED windows](3D/leds.stl)
 
-I choose to print the case in 2 colors, white filament, for the main part, and transparent filament for the 8 LED little windows. Those windows are not required. The case is big, but it can be reduced a little. I was able to print it on Ultimaker 3 extended.
+I chose to print the case in 2 colors, white filament, for the main part, and transparent filament for the 8 LED little windows. Those windows are not required. The case is big, but it can be reduced a little. I was able to print it on Ultimaker 3 extended.
 
 The tube and the case have been glued with hot glue so it can be detached later if needed.
 I wanted to screw the lid to the case, but it is not useful. I also wanted to use small magnets to keep the filter, but it is not needed either.
