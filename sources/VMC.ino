@@ -25,8 +25,8 @@ typedef struct {
 } HumidityFanSpeed;
 
 HumidityFanSpeed humidityFanSpeed[] = {
-  { 20, 50 },  // 20% fan speed, from  0% to  50% humidity.
-  { 40, 65 },  // 40% fan speed, from 50% to  65% humidity.
+  { 20, 50  }, // 20% fan speed, from  0% to  50% humidity.
+  { 40, 65  }, // 40% fan speed, from 50% to  65% humidity.
   { 75, 100 }, // 75% fan speed, from 65% to 100% humidity.
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
