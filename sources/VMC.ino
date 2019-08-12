@@ -78,12 +78,6 @@ void loop() {
   } else {
     ledController.setOn(false);
   }
-  if (dhtController.getHumidity() < 0.01 &&!ledController.hasNotification()) {
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::values(0b01100110, 0x010101), 500));
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::values(0b10011001, 0x010101), 500));
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::values(0b01100110, 0x010101), 500));
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::values(0b10011001, 0x010101), 500));
-  }
   loopDuration = micros() - start;
 }
 
