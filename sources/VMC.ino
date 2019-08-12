@@ -41,7 +41,6 @@ void setup() {
   lightController.begin();
   fanController.begin();
   pirController.begin();
-  pinMode(D4, INPUT);
   
   Particle.function("fanspeed", setFanSpeedOverride);
   Particle.function("test", myTestMethod);
