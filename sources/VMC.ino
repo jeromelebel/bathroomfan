@@ -78,7 +78,7 @@ void loop() {
     if (humidity <= humidityFanSpeed[i].humidity + 1 && currentFanSpeed == humidityFanSpeed[i].speed) {
       break;
     }
-    if (humidity < humidityFanSpeed[i].humidity) {
+    if (humidity <= humidityFanSpeed[i].humidity) {
       setFanSpeed(humidityFanSpeed[i].speed);
       break;
     }
