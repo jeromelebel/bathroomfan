@@ -14,7 +14,7 @@ LEDController ledController;
 LightController lightController;
 PIRController pirController;
 
-double fanSpeedOverride = -1;
+int fanSpeedOverride = -1;
 int counter = 0;
 int loopDuration = 0;
 String startTime;
@@ -61,13 +61,13 @@ void loop() {
   ledController.loop();
   pirController.loop();
   if (dhtController.getHumidity() < 50) {
-    setFanSpeed(0.2);
+    setFanSpeed(20);
   } else if (dhtController.getHumidity() < 51) {
   } else if (dhtController.getHumidity() < 65) {
-    setFanSpeed(0.4);
+    setFanSpeed(40);
   } else if (dhtController.getHumidity() < 66) {
   } else {
-    setFanSpeed(0.75);
+    setFanSpeed(75);
   }
   if (pirController.isHumanPresent()) {
     ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 9, 99, 0x010000));
@@ -81,7 +81,7 @@ void loop() {
   loopDuration = micros() - start;
 }
 
-void setFanSpeed(double value) {
+void setFanSpeed(int value) {
   if (fanSpeedOverride != -1) {
     return;
   }
@@ -92,15 +92,14 @@ void setFanSpeed(double value) {
 }
 
 int setFanSpeedOverride(String value) {
-  int valueToInt = value.toInt();
-  if (valueToInt < 0) {
+  fanSpeedOverride = value.toInt();
+  if (fanSpeedOverride < 0) {
     fanSpeedOverride = -1;
-    return valueToInt;
+    return fanSpeedOverride;
   }
-  fanSpeedOverride = valueToInt / 100.;
   ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentage(fanSpeedOverride, 0x010101), 500));
   fanController.setFanSpeed(fanSpeedOverride);
-  return valueToInt;
+  return fanSpeedOverride;
 }
 
 int myTestMethod(String value) {

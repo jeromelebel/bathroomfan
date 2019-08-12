@@ -34,9 +34,14 @@ void FanController::loop() {
   readRPM();
 }
 
-void FanController::setFanSpeed(double value) {
+void FanController::setFanSpeed(int value) {
+  if (value < 0) {
+    value = 0;
+  } else if (value > 100) {
+    value = 100;
+  }
   _fanSpeed = value;
-  analogWrite(PWM_PIN, _fanSpeed * 255, PWM_FREQ);
+  analogWrite(PWM_PIN, _fanSpeed / 100. * 255., PWM_FREQ);
 }
 
 void FanController::readRPM() {

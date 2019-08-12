@@ -8,14 +8,14 @@ public:
   
   void begin();
   void loop();
-  void setFanSpeed(double value);
-  double getFanSpeed() { return _fanSpeed; };
+  void setFanSpeed(int value);
+  int getFanSpeed() { return _fanSpeed; };
   int getRPM() const { return _rpm; };
 
 private:
   void readRPM();
   
-  double _fanSpeed;
+  int _fanSpeed;
   int _rpm;
 };
 
