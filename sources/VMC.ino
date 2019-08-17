@@ -8,6 +8,8 @@
 #include "LightController.h"
 #include "PIRController.h"
 
+#define ShowTemperatureDelay   5000
+
 DHTController dhtController;
 FanController fanController;
 LEDController ledController;
@@ -30,6 +32,13 @@ HumidityFanSpeed humidityFanSpeed[] = {
   { 75, 100 }, // 75% fan speed, from 65% to 100% humidity.
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
+
+void showTemperatureNotification() {
+  double temperature = dhtController.getTemperature();
+  LEDController::PixelColors pixelColors = LEDController::PixelColors::percentageValue(temperature, 17, 28, 0x000100);
+  LEDController::Notification notification(pixelColors, ShowTemperatureDelay);
+  ledController.addNotification(notification);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -61,7 +70,7 @@ void setup() {
   }
   delay(500);
   dhtController.loop();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(dhtController.getTemperature(), 17, 28, 0x000100), 1500));
+  showTemperatureNotification();
 }
 
 void loop() {
@@ -85,7 +94,7 @@ void loop() {
   if (pirController.isHumanPresent()) {
     ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 9, 99, 0x010000));
     if (!ledController.isOn()) {
-        ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(dhtController.getTemperature(), 17, 28, 0x000100), 1500));
+        showTemperatureNotification();
         ledController.setOn(true);
     }
   } else {
