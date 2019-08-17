@@ -24,7 +24,7 @@ FanController::~FanController() {
 void FanController::begin() {
   pinMode(PWM_PIN, OUTPUT);
   pinMode(RPM_PIN, INPUT);
-  attachInterrupt(RPM_PIN, rpmInterrupt, CHANGE);
+  attachInterrupt(RPM_PIN, rpmInterrupt, RISING);
   setFanSpeed(0);
   Particle.variable("rpm", _rpm);
   Particle.variable("fanspeed", _fanSpeed);
@@ -48,6 +48,6 @@ void FanController::readRPM() {
   if ((unsigned long)(micros() - lastRPMChange) > 200000) {
     _rpm = 0;
   } else {
-    _rpm = 1000000. / rpmDuration * 15.;
+    _rpm = 1000000. / rpmDuration * 15. * 2.;
   }
 }
