@@ -89,7 +89,7 @@ void loop() {
   pirController.loop();
   int humidity = dhtController.getHumidity();
   int currentFanSpeed = fanController.getFanSpeed();
-  for (int i = 0; i < humidityFanSpeedCount; i++) {
+  for (size_t i = 0; i < humidityFanSpeedCount; i++) {
     if (humidity <= humidityFanSpeed[i].humidity + 1 && currentFanSpeed == humidityFanSpeed[i].speed) {
       break;
     }
