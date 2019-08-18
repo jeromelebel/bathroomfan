@@ -42,11 +42,7 @@ LEDController::PixelColors LEDController::PixelColors::values(int pixels, uint32
 
 // static
 LEDController::PixelColors LEDController::PixelColors::black() {
-  std::vector<uint32_t> colors;
-  for (int i = 0; i < PIXEL_COUNT; i++) {
-    colors.push_back(0x0);
-  }
-  return LEDController::PixelColors(colors);
+  return values(0, 0);
 }
 
 LEDController::PixelColors::PixelColors(std::vector<uint32_t> colors) :
