@@ -12,7 +12,13 @@ class LEDController {
 public:
   class PixelColors {
   public:
+    // |value| from -1 to 1:
+    //  - 0: pixel 0 and 7 set to |color|.
+    //  - 0 to 1: vu-meter from bottom to top.
+    //  - -1 to 0: vu-meter from top to bottom.
     static PixelColors percentage(float percentage, uint32_t color);
+    // If |minimum| < |maximum|, vu-meter from bottom to top.
+    // If |maximum| < |minimum|, vu-meter from top to bottom.
     static PixelColors percentageValue(float value, float minimum, float maximum, uint32_t color);
     static PixelColors values(int pixels, uint32_t color);
     static PixelColors black();

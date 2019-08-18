@@ -11,23 +11,43 @@
 LEDController::PixelColors LEDController::PixelColors::percentage(float percentage, uint32_t color) {
   std::vector<uint32_t> colors;
   bool allOff = false;
+  bool negatif = percentage < 0;
+  percentage = negatif ? -percentage : percentage;
+  Particle.publish(String(negatif), String(percentage));
   for (int i = 0; i < PIXEL_COUNT; i++) {
     uint32_t pixelColor = 0x0;
     if (percentage >= (float)(i + 1) / (float)(PIXEL_COUNT + 1)) {
       pixelColor = color;
     } else if (i == 0) {
       allOff = true;
-    } else if (allOff && i == PIXEL_COUNT - 1) {
-      pixelColor = color;
     }
-    colors.push_back(pixelColor);
+    if (allOff) {
+      if (i == PIXEL_COUNT - 1 || i == 0) {
+        pixelColor = color;
+      } else {
+        pixelColor = 0x0;
+      }
+    }
+    if (negatif) {
+      colors.insert(colors.begin(), pixelColor);
+    } else {
+      colors.push_back(pixelColor);
+    }
   }
   return LEDController::PixelColors(colors);
 }
 
 // static
 LEDController::PixelColors LEDController::PixelColors::percentageValue(float value, float minimum, float maximum, uint32_t color) {
-  return LEDController::PixelColors::percentage((value - minimum) / (maximum - minimum), color);
+  float percentage = 0;
+  if (minimum < maximum) {
+    percentage = (value - minimum) / (maximum - minimum);
+  } else if (minimum > maximum) {
+    percentage = -(value - maximum) / (minimum - maximum);
+  } else {
+    percentage = 0;
+  }
+  return LEDController::PixelColors::percentage(percentage, color);
 }
 
 // static
