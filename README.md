@@ -115,7 +115,7 @@ The software can be easily updated to have any configuration. So far, I configur
 - from 50% to  65% of humidity, fan speed is set at 40%
 - from 65% to 100% of humidity, fan speed is set at 75%
 
-When the PIR sensor detects something, the LEDs are turned on. First the LEDs shows, in green color. The temperature is displayed during 5 seconds. Between 20 and 28 Celsius, LEDs are turned on from bottom to top, with one LED per degres. Between 12 and 20 Celsius, LEDs are turned off from bottom to top with one LED per degres.
+When the PIR sensor detects something, the LEDs are turned on. First the LEDs shows, in green color, the temperature, during 5 seconds. Between 20 and 28 Celsius, LEDs are turned on from bottom to top, with one LED per degres. Between 12 and 20 Celsius, LEDs are turned off from bottom to top with one LED per degres.
 
 By default, the LEDs always shows, in red color, the humidity (range from 10% to 100%). If the PIR sensor detects nothing during 5mn the LEDs are turned off.
 
