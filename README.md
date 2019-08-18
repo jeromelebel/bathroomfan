@@ -39,12 +39,12 @@ The microcontroller inputs and outputs work in 3.3V. So I used the 3.3V from the
 
 ### Sensors
 
-Of course a humidity sensor is needed. I choose a basic one : DHT22. Since it is always easier to add stuff during design than once the project is finished. I also added:
+Of course a humidity sensor is needed. Since it is always easier to add stuff during design, it is better to add extra ones even if it is not useful now. The sensors:
+- DHT22
 - PIR sensor
 - light sensor
 
-One of my ideas is to reduce a little the fan speed when nobody is inside the bathroom. My bathroom is next to my bedroom, so I might try to reduce to 80% the speed fan after I leave my bathroom, late at night.
-All 3 sensors can work in 3.3V
+The PIR is used to turn off LEDs when nobody is the bathroom. The light sensor is not used so far. All 3 sensors can work in 3.3V.
 
 ### LEDs
 
