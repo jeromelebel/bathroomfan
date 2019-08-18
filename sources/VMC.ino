@@ -124,15 +124,15 @@ int setFanSpeedOverride(String value) {
   return fanSpeedOverride;
 }
 
-int myTestMethod(String value) {
-  int valueToInt = value.toInt();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 10, 100, 0x000001), 1000));
+int myTestMethod(String stringValue) {
+  double value = stringValue.toFloat();
+  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value, 10, 100, 0x000001), 1000));
   return pirController.isHumanPresent();
 }
 
-int myTestMethod1(String value) {
-  int valueToInt = value.toInt();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 10, 100, 0x000101), 1000));
+int myTestMethod1(String stringValue) {
+  double value = stringValue.toFloat();
+  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value, 10, 100, 0x000101), 1000));
   return counter;
 }
 
