@@ -115,7 +115,8 @@ void setFanSpeed(int value) {
     return;
   }
   if (fanController.getFanSpeed() != value && !ledController.hasNotification()) {
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value * 100, 10, 100, 0x010101), 500));
+    LEDController::PixelColors color = LEDController::PixelColors::percentageValue(value, 10, 100, 0x010101);
+    ledController.addNotification(LEDController::Notification(color, 500));
   }
   fanController.setFanSpeed(value);
 }
