@@ -34,7 +34,15 @@ HumidityFanSpeed humidityFanSpeed[] = {
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
 
 void showTemperatureNotification(double temperature) {
-  LEDController::PixelColors pixelColors = LEDController::PixelColors::percentageValue(temperature, 17, 28, 0x000100);
+  LEDController::PixelColors pixelColors = LEDController::PixelColors::black();
+  uint32_t color = 0x000100;
+  if (temperature >= 21) {
+    pixelColors = LEDController::PixelColors::percentageValue(temperature, 20, 29, color);
+  } else if (temperature < 20) {
+    pixelColors = LEDController::PixelColors::percentageValue(temperature, 20, 11, color);
+  } else {
+    pixelColors = LEDController::PixelColors::values(0b10000001, color);
+  }
   LEDController::Notification notification(pixelColors, ShowTemperatureDelay);
   ledController.addNotification(notification);
 }
