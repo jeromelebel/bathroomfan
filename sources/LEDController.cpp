@@ -13,7 +13,7 @@ LEDController::PixelColors LEDController::PixelColors::percentage(float percenta
   bool allOff = false;
   for (int i = 0; i < PIXEL_COUNT; i++) {
     uint32_t pixelColor = 0x0;
-    if (percentage > (float)(i + 1) / (float)(PIXEL_COUNT + 1)) {
+    if (percentage >= (float)(i + 1) / (float)(PIXEL_COUNT + 1)) {
       pixelColor = color;
     } else if (i == 0) {
       allOff = true;

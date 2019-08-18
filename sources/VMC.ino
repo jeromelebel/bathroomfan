@@ -92,7 +92,7 @@ void loop() {
     }
   }
   if (pirController.isHumanPresent()) {
-    ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 9, 99, 0x010000));
+    ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 10, 100, 0x010000));
     if (!ledController.isOn()) {
         showTemperatureNotification();
         ledController.setOn(true);
@@ -108,7 +108,7 @@ void setFanSpeed(int value) {
     return;
   }
   if (fanController.getFanSpeed() != value && !ledController.hasNotification()) {
-    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value * 100, 9, 99, 0x010101), 500));
+    ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value * 100, 10, 100, 0x010101), 500));
   }
   fanController.setFanSpeed(value);
 }
@@ -126,13 +126,13 @@ int setFanSpeedOverride(String value) {
 
 int myTestMethod(String value) {
   int valueToInt = value.toInt();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 9, 99, 0x000001), 1000));
+  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 10, 100, 0x000001), 1000));
   return pirController.isHumanPresent();
 }
 
 int myTestMethod1(String value) {
   int valueToInt = value.toInt();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 9, 99, 0x000101), 1000));
+  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(valueToInt, 10, 100, 0x000101), 1000));
   return counter;
 }
 
