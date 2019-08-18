@@ -16,11 +16,11 @@ public:
     static PixelColors percentageValue(float value, float minimum, float maximum, uint32_t color);
     static PixelColors values(int pixels, uint32_t color);
     static PixelColors black();
-    PixelColors(std::vector<uint32_t> colors);
     ~PixelColors();
     uint32_t operator[](int i) const { return _pixelColors[i]; };
 
   private:
+    PixelColors(std::vector<uint32_t> colors);
     void setColor(int i, uint32_t color) { _pixelColors[i] = color; };
     std::vector<uint32_t> _pixelColors;
   };
