@@ -33,8 +33,7 @@ HumidityFanSpeed humidityFanSpeed[] = {
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
 
-void showTemperatureNotification() {
-  double temperature = dhtController.getTemperature();
+void showTemperatureNotification(double temperature) {
   LEDController::PixelColors pixelColors = LEDController::PixelColors::percentageValue(temperature, 17, 28, 0x000100);
   LEDController::Notification notification(pixelColors, ShowTemperatureDelay);
   ledController.addNotification(notification);
@@ -70,7 +69,7 @@ void setup() {
   }
   delay(500);
   dhtController.loop();
-  showTemperatureNotification();
+  showTemperatureNotification(dhtController.getTemperature());
 }
 
 void loop() {
@@ -94,7 +93,7 @@ void loop() {
   if (pirController.isHumanPresent()) {
     ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 10, 100, 0x010000));
     if (!ledController.isOn()) {
-        showTemperatureNotification();
+        showTemperatureNotification(dhtController.getTemperature());
         ledController.setOn(true);
     }
   } else {
@@ -126,7 +125,7 @@ int setFanSpeedOverride(String value) {
 
 int myTestMethod(String stringValue) {
   double value = stringValue.toFloat();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value, 10, 100, 0x000001), 1000));
+  showTemperatureNotification(value);
   return pirController.isHumanPresent();
 }
 
