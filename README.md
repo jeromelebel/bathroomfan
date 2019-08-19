@@ -80,7 +80,7 @@ To be able to print correctly the fan case, the model has been divided into 3 pi
 - the [pipe](3D/pipe.stl) for the exhaust fan
 - the [lid](3D/lid.stl)
 - the [case](3D/case.stl) itself
-- the [LED windows](3D/leds.stl)
+- the [LED windows](3D/LED.stl)
 
 I chose to print the case in 2 colors, white filament, for the main part, and transparent filament for the 8 LED little windows. Those windows are not required. The case is big, but it can be reduced a little. I was able to print it on Ultimaker 3 extended.
 
