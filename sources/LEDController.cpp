@@ -43,7 +43,7 @@ LEDController::PixelColors LEDController::PixelColors::percentageValue(float val
   if (minimum < maximum) {
     percentage = (value - minimum) / (maximum - minimum);
   } else if (minimum > maximum) {
-    percentage = -(value - maximum) / (minimum - maximum);
+    percentage = (value - minimum) / (minimum - maximum);
   } else {
     percentage = 0;
   }
