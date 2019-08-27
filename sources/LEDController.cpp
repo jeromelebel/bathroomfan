@@ -13,7 +13,6 @@ LEDController::PixelColors LEDController::PixelColors::percentage(float percenta
   bool allOff = false;
   bool negatif = percentage < 0;
   percentage = negatif ? -percentage : percentage;
-  Particle.publish(String(negatif), String(percentage));
   for (int i = 0; i < PIXEL_COUNT; i++) {
     uint32_t pixelColor = 0x0;
     if (percentage >= (float)(i + 1) / (float)(PIXEL_COUNT + 1)) {
