@@ -27,9 +27,10 @@ typedef struct {
 } HumidityFanSpeed;
 
 HumidityFanSpeed humidityFanSpeed[] = {
-  { 20, 50  }, // 20% fan speed, from  0% to  50% humidity.
-  { 40, 65  }, // 40% fan speed, from 50% to  65% humidity.
-  { 75, 100 }, // 75% fan speed, from 65% to 100% humidity.
+  {  20,  40 }, //  20% fan speed, at  34% humidity.
+  {  40,  50 }, //  40% fan speed, at  50% humidity.
+  { 100,  80 }, // 100% fan speed, at 80% humidity.
+  { 100, 100 }, // 100% fan speed, at 100% humidity.
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
 
@@ -45,6 +46,27 @@ void showTemperatureNotification(double temperature) {
   }
   LEDController::Notification notification(pixelColors, ShowTemperatureDelay);
   ledController.addNotification(notification);
+}
+
+void setFanSpeedForHumidity(double humidity) {
+  size_t index = 0;
+  for (; index < humidityFanSpeedCount; index++) {
+    if (humidity <= humidityFanSpeed[index].humidity) {
+      break;
+    }
+  }
+  if (index == 0) {
+    setFanSpeed(humidityFanSpeed[index].speed);
+    return;
+  }
+  double previousLevelHumidity = humidityFanSpeed[index - 1].humidity;
+  double humidityDelta = humidityFanSpeed[index].humidity - previousLevelHumidity;
+  int previousLevelFanSpeed = humidityFanSpeed[index - 1].speed;
+  int fanSpeedDelta = humidityFanSpeed[index].speed - previousLevelFanSpeed;
+  int fanSpeed = (humidity - previousLevelHumidity) / humidityDelta * fanSpeedDelta + previousLevelFanSpeed;
+  if (fanController.getFanSpeed() != fanSpeed) {
+    setFanSpeed(fanSpeed);
+  }
 }
 
 void setup() {
@@ -88,16 +110,7 @@ void loop() {
   ledController.loop();
   pirController.loop();
   int humidity = dhtController.getHumidity();
-  int currentFanSpeed = fanController.getFanSpeed();
-  for (size_t i = 0; i < humidityFanSpeedCount; i++) {
-    if (humidity <= humidityFanSpeed[i].humidity + 1 && currentFanSpeed == humidityFanSpeed[i].speed) {
-      break;
-    }
-    if (humidity <= humidityFanSpeed[i].humidity) {
-      setFanSpeed(humidityFanSpeed[i].speed);
-      break;
-    }
-  }
+  setFanSpeedForHumidity(humidity);
   if (pirController.isHumanPresent()) {
     ledController.setPixels(LEDController::PixelColors::percentageValue(dhtController.getHumidity(), 10, 100, 0x010000));
     if (!ledController.isOn()) {
@@ -114,7 +127,7 @@ void setFanSpeed(int value) {
   if (fanSpeedOverride != -1) {
     return;
   }
-  if (fanController.getFanSpeed() != value && !ledController.hasNotification()) {
+  if (fanController.getFanSpeed() != value && !ledController.hasNotification() && ledController.isOn()) {
     LEDController::PixelColors color = LEDController::PixelColors::percentageValue(value, 10, 100, 0x010101);
     ledController.addNotification(LEDController::Notification(color, 500));
   }
