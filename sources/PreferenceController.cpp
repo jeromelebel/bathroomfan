@@ -102,12 +102,12 @@ void PreferenceController::save() {
 }
 
 bool PreferenceController::hasValueForKey(String key) {
-  std::vector<PreferenceController::KeyValue*>::iterator it = getKeyValueForKey(key);
+  std::vector<KeyValue*>::iterator it = getKeyValueForKey(key);
   return it != _keyValues.end();
 }
 
 String PreferenceController::valueForKey(String key) {
-  std::vector<PreferenceController::KeyValue*>::iterator it = getKeyValueForKey(key);
+  std::vector<KeyValue*>::iterator it = getKeyValueForKey(key);
   if (it != _keyValues.end()) {
     return (*it)->value;
   }
@@ -118,7 +118,7 @@ bool PreferenceController::setValueForKey(String value, String key) {
   if (key.length() > 255 || value.length() > 255) {
     return false;
   }
-  std::vector<PreferenceController::KeyValue*>::iterator it = getKeyValueForKey(key);
+  std::vector<KeyValue*>::iterator it = getKeyValueForKey(key);
   if (it != _keyValues.end()) {
     (*it)->value = value;
     return true;
@@ -134,7 +134,7 @@ bool PreferenceController::setValueForKey(String value, String key) {
 }
 
 bool PreferenceController::removeValueForKey(String key) {
-  std::vector<PreferenceController::KeyValue*>::iterator it = getKeyValueForKey(key);
+  std::vector<KeyValue*>::iterator it = getKeyValueForKey(key);
   if (it == _keyValues.end()) {
     return false;
   }
@@ -145,7 +145,7 @@ bool PreferenceController::removeValueForKey(String key) {
 }
 
 String PreferenceController::keyAtIndex(int index) const {
-  if (index >= _keyValues.size()) {
+  if (index >= (int)_keyValues.size()) {
       return String();
   }
   const KeyValue *keyValue = _keyValues.at(index);
@@ -153,7 +153,7 @@ String PreferenceController::keyAtIndex(int index) const {
 }
 
 String PreferenceController::valueAtIndex(int index) const {
-  if (index >= _keyValues.size()) {
+  if (index >= (int)_keyValues.size()) {
       return String();
   }
   const KeyValue *keyValue = _keyValues.at(index);
@@ -162,7 +162,7 @@ String PreferenceController::valueAtIndex(int index) const {
 
 
 std::vector<PreferenceController::KeyValue*>::iterator PreferenceController::getKeyValueForKey(String key) {
-  std::vector<PreferenceController::KeyValue*>::iterator it = _keyValues.begin();
+  std::vector<KeyValue*>::iterator it = _keyValues.begin();
   while (it != _keyValues.end()) {
     if ((*it)->key == key) {
       break;;

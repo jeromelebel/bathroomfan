@@ -5,7 +5,7 @@ class PreferenceController {
 public:
   PreferenceController();
   ~PreferenceController();
-  
+
   bool load();
   void save();
 
@@ -27,5 +27,5 @@ protected:
 
   std::vector<KeyValue*>::iterator getKeyValueForKey(String key);
 
-  std::vector<KeyValue *> _keyValues;  
+  std::vector<KeyValue *> _keyValues;
 };
