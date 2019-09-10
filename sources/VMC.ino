@@ -7,6 +7,7 @@
 #include "LEDController.h"
 #include "LightController.h"
 #include "PIRController.h"
+#include "PreferenceController.h"
 
 #define ShowTemperatureDelay   5000
 
@@ -15,6 +16,7 @@ FanController fanController;
 LEDController ledController;
 LightController lightController;
 PIRController pirController;
+PreferenceController preferenceController;
 
 int fanSpeedOverride = -1;
 int counter = 0;
@@ -79,6 +81,7 @@ void setup() {
   lightController.begin();
   fanController.begin();
   pirController.begin();
+  preferenceController.load();
   
   Particle.function("fanspeed", setFanSpeedOverride);
   Particle.function("test", myTestMethod);
