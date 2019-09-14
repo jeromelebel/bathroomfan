@@ -24,6 +24,8 @@ public:
     static PixelColors black();
     ~PixelColors();
     uint32_t operator[](int i) const { return _pixelColors[i]; };
+    bool operator==(const PixelColors &a) { return _pixelColors == a._pixelColors; };
+    bool operator!=(const PixelColors &a) { return _pixelColors != a._pixelColors; };
 
   private:
     PixelColors(std::vector<uint32_t> colors);
