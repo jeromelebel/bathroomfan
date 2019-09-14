@@ -39,6 +39,11 @@ LEDController::PixelColors LEDController::PixelColors::percentage(float percenta
 // static
 LEDController::PixelColors LEDController::PixelColors::percentageValue(float value, float minimum, float maximum, uint32_t color) {
   float percentage = 0;
+  if (value < minimum) {
+    value = minimum;
+  } else if (value > maximum) {
+    value = maximum;
+  }
   if (minimum < maximum) {
     percentage = (value - minimum) / (maximum - minimum);
   } else if (minimum > maximum) {
