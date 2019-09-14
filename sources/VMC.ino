@@ -117,6 +117,13 @@ void setup() {
   String mqttPort = preferenceController.valueForKey(MQTTPortPref);
   Particle.publish("mqtt server", mqttServer, PRIVATE);
   Particle.publish("mqtt port", mqttPort, PRIVATE);
+  if (mqttServer != "" && mqttPort != "") {
+    mqttController.begin(mqttServer, mqttPort.toInt());
+    mqttController.addTopic(HumiMQTTTopic, valueForTopic);
+    mqttController.addTopic(TempMQTTTopic, valueForTopic);
+    mqttController.addTopic(FanRPMMQTTTopic, valueForTopic);
+    mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
+  }
 
   welcomeAnimation();
   dhtController.loop();
@@ -195,15 +202,6 @@ int setFanSpeedOverride(String value) {
 }
 
 int myTestMethod(String stringValue) {
-  String mqttServer = preferenceController.valueForKey(MQTTServerPref);
-  String mqttPort = preferenceController.valueForKey(MQTTPortPref);
-  if (mqttServer != "" && mqttPort != "") {
-    mqttController.begin(mqttServer, mqttPort.toInt());
-    mqttController.addTopic(HumiMQTTTopic, valueForTopic);
-    mqttController.addTopic(TempMQTTTopic, valueForTopic);
-    mqttController.addTopic(FanRPMMQTTTopic, valueForTopic);
-    mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
-  }
   return 1;
 }
 
