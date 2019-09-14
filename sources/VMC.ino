@@ -118,18 +118,7 @@ void setup() {
   Particle.publish("mqtt server", mqttServer, PRIVATE);
   Particle.publish("mqtt port", mqttPort, PRIVATE);
 
-  ledController.setOn(true);
-  int value = 0x0;
-  for (int i = 0; i < PIXEL_COUNT; i++) {
-    int currentPixel = 0b100000000;
-    for (int j = 0; j < PIXEL_COUNT - i; j++) {
-      currentPixel = currentPixel >> 1;
-      ledController.setPixels(LEDController::PixelColors::values(value | currentPixel, 0x010101));
-      delay(50);
-    }
-    value = value | currentPixel;
-  }
-  delay(500);
+  welcomeAnimation();
   dhtController.loop();
   showTemperatureNotification(dhtController.getTemperature());
 }
@@ -154,6 +143,21 @@ void loop() {
     ledController.setOn(false);
   }
   loopDuration = micros() - start;
+}
+
+void welcomeAnimation() {
+  ledController.setOn(true);
+  int value = 0x0;
+  for (int i = 0; i < PIXEL_COUNT; i++) {
+    int currentPixel = 0b100000000;
+    for (int j = 0; j < PIXEL_COUNT - i; j++) {
+      currentPixel = currentPixel >> 1;
+      ledController.setPixels(LEDController::PixelColors::values(value | currentPixel, 0x010101));
+      delay(50);
+    }
+    value = value | currentPixel;
+  }
+  delay(500);
 }
 
 void setFanSpeed(int value) {
