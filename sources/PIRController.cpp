@@ -18,8 +18,6 @@ void PIRController::begin() {
   _lastHumainDate = millis();  
   pinMode(PIR_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
-  Particle.variable("pir", _pir);
-  Particle.variable("lasthumain", _lastHumainDate);
 }
 
 void PIRController::loop() {
