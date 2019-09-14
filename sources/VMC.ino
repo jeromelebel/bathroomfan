@@ -6,10 +6,17 @@
 #include "FanController.h"
 #include "LEDController.h"
 #include "LightController.h"
+#include "MQTTController.h"
 #include "PIRController.h"
 #include "PreferenceController.h"
 
 #define ShowTemperatureDelay   5000
+#define MQTTServerPref         "mqtts"
+#define MQTTPortPref           "mqttp"
+#define TempMQTTTopic          "vmc/temp"
+#define HumiMQTTTopic          "vmc/humi"
+#define FanRPMMQTTTopic        "vmc/fan/rpm"
+#define FanSpeedMQTTTopic      "vmc/fan/speed"
 
 DHTController dhtController;
 FanController fanController;
@@ -17,6 +24,7 @@ LEDController ledController;
 LightController lightController;
 PIRController pirController;
 PreferenceController preferenceController;
+MQTTController mqttController;
 
 int fanSpeedOverride = -1;
 int counter = 0;
@@ -35,6 +43,19 @@ HumidityFanSpeed humidityFanSpeed[] = {
   { 100, 100 }, // 100% fan speed, at 100% humidity.
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
+
+String valueForTopic(String topic) {
+  if (topic == TempMQTTTopic) {
+    return String(dhtController.getTemperature(), 1);
+  } else if (topic == HumiMQTTTopic) {
+    return String(dhtController.getHumidity(), 1);
+  } else if (topic == FanRPMMQTTTopic) {
+    return String(fanController.getRPM());
+  } else if (topic == FanSpeedMQTTTopic) {
+    return String(fanController.getFanSpeed());
+  }
+  return String();
+}
 
 void showTemperatureNotification(double temperature) {
   LEDController::PixelColors pixelColors = LEDController::PixelColors::black();
@@ -76,18 +97,26 @@ void setup() {
   WiFi.setHostname("VMC");
   startTime = Time.timeStr();
 
+  preferenceController.load();
+
   dhtController.begin();
   ledController.begin();
   lightController.begin();
   fanController.begin();
   pirController.begin();
   preferenceController.load();
-  
+
+  Particle.function("MQTTServer", setMQTTServer);
+  Particle.function("MQTTPort", setMQTTPort);
   Particle.function("fanspeed", setFanSpeedOverride);
   Particle.function("test", myTestMethod);
-  Particle.function("test1", myTestMethod1);
   Particle.variable("loop", loopDuration);
   Particle.variable("start", startTime);
+
+  String mqttServer = preferenceController.valueForKey(MQTTServerPref);
+  String mqttPort = preferenceController.valueForKey(MQTTPortPref);
+  Particle.publish("mqtt server", mqttServer, PRIVATE);
+  Particle.publish("mqtt port", mqttPort, PRIVATE);
 
   ledController.setOn(true);
   int value = 0x0;
@@ -112,6 +141,7 @@ void loop() {
   lightController.loop();
   ledController.loop();
   pirController.loop();
+  mqttController.loop();
   int humidity = dhtController.getHumidity();
   setFanSpeedForHumidity(humidity);
   if (pirController.isHumanPresent()) {
@@ -137,6 +167,18 @@ void setFanSpeed(int value) {
   fanController.setFanSpeed(value);
 }
 
+int setMQTTServer(String server) {
+  preferenceController.setValueForKey(server, MQTTServerPref);
+  preferenceController.save();
+  return 1;
+}
+
+int setMQTTPort(String port) {
+  preferenceController.setValueForKey(port, MQTTPortPref);
+  preferenceController.save();
+  return 1;
+}
+
 int setFanSpeedOverride(String value) {
   fanSpeedOverride = value.toInt();
   if (fanSpeedOverride < 0) {
@@ -149,14 +191,16 @@ int setFanSpeedOverride(String value) {
 }
 
 int myTestMethod(String stringValue) {
-  double value = stringValue.toFloat();
-  showTemperatureNotification(value);
-  return pirController.isHumanPresent();
+  String mqttServer = preferenceController.valueForKey(MQTTServerPref);
+  String mqttPort = preferenceController.valueForKey(MQTTPortPref);
+  if (mqttServer != "" && mqttPort != "") {
+    mqttController.begin(mqttServer, mqttPort.toInt());
+    mqttController.addTopic(HumiMQTTTopic, valueForTopic);
+    mqttController.addTopic(TempMQTTTopic, valueForTopic);
+    mqttController.addTopic(FanRPMMQTTTopic, valueForTopic);
+    mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
+  }
+  return 1;
 }
 
-int myTestMethod1(String stringValue) {
-  double value = stringValue.toFloat();
-  ledController.addNotification(LEDController::Notification(LEDController::PixelColors::percentageValue(value, 10, 100, 0x000101), 1000));
-  return counter;
-}
 
