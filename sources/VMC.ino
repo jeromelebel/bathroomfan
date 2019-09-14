@@ -30,6 +30,7 @@ int fanSpeedOverride = -1;
 int counter = 0;
 int loopDuration = 0;
 String startTime;
+LEDController::PixelColors lastFanSpeedNotification = LEDController::PixelColors::black();
 
 typedef struct {
   int speed;
@@ -173,7 +174,12 @@ void setFanSpeed(int value) {
   }
   if (fanController.getFanSpeed() != value && !ledController.hasNotification() && ledController.isOn()) {
     LEDController::PixelColors color = LEDController::PixelColors::percentageValue(value, 10, 100, 0x010101);
-    ledController.addNotification(LEDController::Notification(color, 500));
+    if (color != lastFanSpeedNotification) {
+      ledController.addNotification(LEDController::Notification(color, 500));
+      lastFanSpeedNotification = color;
+    }
+  } else {
+    lastFanSpeedNotification = LEDController::PixelColors::black();
   }
   fanController.setFanSpeed(value);
 }
@@ -202,7 +208,7 @@ int setFanSpeedOverride(String value) {
 }
 
 int myTestMethod(String stringValue) {
+  setFanSpeed(stringValue.toInt());
   return 1;
 }
-
 
