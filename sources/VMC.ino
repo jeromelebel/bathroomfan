@@ -105,7 +105,6 @@ void setup() {
   lightController.begin();
   fanController.begin();
   pirController.begin();
-  preferenceController.load();
 
   Particle.function("MQTTServer", setMQTTServer);
   Particle.function("MQTTPort", setMQTTPort);
@@ -211,4 +210,3 @@ int myTestMethod(String stringValue) {
   setFanSpeed(stringValue.toInt());
   return 1;
 }
-
