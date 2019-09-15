@@ -1,7 +1,5 @@
 #include <Particle.h>
 
-#include "DHT.h"
-
 #include "DHTController.h"
 #include "FanController.h"
 #include "LEDController.h"
