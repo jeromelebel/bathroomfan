@@ -8,14 +8,13 @@
 
 PIRController::PIRController() :
     _pir(false),
-    _lastHumainDate(0) {
+    _lastHumainDate(-HUMAIN_DURATION) {
 }
 
 PIRController::~PIRController() {
 }
 
 void PIRController::begin() {
-  _lastHumainDate = millis();  
   pinMode(PIR_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
 }
