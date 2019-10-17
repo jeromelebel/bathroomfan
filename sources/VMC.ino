@@ -15,6 +15,8 @@
 #define HumiMQTTTopic          "vmc/humi"
 #define FanRPMMQTTTopic        "vmc/fan/rpm"
 #define FanSpeedMQTTTopic      "vmc/fan/speed"
+#define LocalTimeZone          2
+#define DaylightSavingTimeZone 1
 
 DHTController dhtController;
 FanController fanController;
@@ -91,6 +93,13 @@ void setFanSpeedForHumidity(double humidity) {
   }
 }
 
+void syncTimeIfNeeded() {
+  unsigned long lastSync = Particle.timeSyncedLast();
+  if (millis() - lastSync > 24 * 60 * 60 * 1000) {
+    Particle.syncTime();
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   WiFi.setHostname("VMC");
@@ -126,6 +135,8 @@ void setup() {
   welcomeAnimation();
   dhtController.loop();
   showTemperatureNotification(dhtController.getTemperature());
+  Time.zone(LocalTimeZone);
+  Time.setDSTOffset(DaylightSavingTimeZone);
 }
 
 void loop() {
@@ -147,6 +158,7 @@ void loop() {
   } else {
     ledController.setOn(false);
   }
+  syncTimeIfNeeded();
   loopDuration = micros() - start;
 }
 
