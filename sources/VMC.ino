@@ -5,6 +5,7 @@
 #include "LEDController.h"
 #include "LightController.h"
 #include "MQTTController.h"
+#include "NightModeController.h"
 #include "PIRController.h"
 #include "PreferenceController.h"
 
@@ -17,14 +18,16 @@
 #define FanSpeedMQTTTopic      "vmc/fan/speed"
 #define LocalTimeZone          2
 #define DaylightSavingTimeZone 1
+#define NightMaxFanSpeed       70
 
 DHTController dhtController;
 FanController fanController;
 LEDController ledController;
 LightController lightController;
+MQTTController mqttController;
+NightModeController nightModeController;
 PIRController pirController;
 PreferenceController preferenceController;
-MQTTController mqttController;
 
 int fanSpeedOverride = -1;
 int counter = 0;
@@ -108,9 +111,10 @@ void setup() {
   preferenceController.load();
 
   dhtController.begin();
+  fanController.begin();
   ledController.begin();
   lightController.begin();
-  fanController.begin();
+  nightModeController.begin();
   pirController.begin();
 
   Particle.function("MQTTServer", setMQTTServer);
@@ -131,22 +135,26 @@ void setup() {
     mqttController.addTopic(FanRPMMQTTTopic, valueForTopic);
     mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
   }
+  Time.zone(LocalTimeZone);
+  Time.setDSTOffset(DaylightSavingTimeZone);
+  nightModeController.setPIRController(&pirController);
 
   welcomeAnimation();
   dhtController.loop();
   showTemperatureNotification(dhtController.getTemperature());
-  Time.zone(LocalTimeZone);
-  Time.setDSTOffset(DaylightSavingTimeZone);
 }
 
 void loop() {
   unsigned long start = micros();
+
   dhtController.loop();
   fanController.loop();
-  lightController.loop();
   ledController.loop();
-  pirController.loop();
+  lightController.loop();
   mqttController.loop();
+  nightModeController.loop();
+  pirController.loop();
+
   int humidity = dhtController.getHumidity();
   setFanSpeedForHumidity(humidity);
   if (pirController.isHumanPresent()) {
@@ -180,6 +188,9 @@ void welcomeAnimation() {
 void setFanSpeed(int value) {
   if (fanSpeedOverride != -1) {
     return;
+  }
+  if (nightModeController.isNight() && value > NightMaxFanSpeed) {
+    value = NightMaxFanSpeed;
   }
   if (fanController.getFanSpeed() != value && !ledController.hasNotification() && ledController.isOn()) {
     LEDController::PixelColors color = LEDController::PixelColors::percentageValue(value, 10, 100, 0x010101);
