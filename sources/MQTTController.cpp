@@ -8,10 +8,11 @@
 
 MQTTController::MQTTController() : _mqtt(NULL), _lastUpdate(0) {}
 
-MQTTController::~MQTTController() {};
+MQTTController::~MQTTController() {}
 
 void MQTTController::begin(const char *server, uint16_t port) {
-  _mqtt = new MQTT(server, port, NULL);
+  _mqtt = new MQTT();
+  _mqtt->setBroker(server, port);
 }
 
 void MQTTController::loop() {

@@ -100,6 +100,7 @@ bug fixed and features pull requests
 #define debug_print(fmt, ...) ((void)0)
 #endif /* DEBUG_MQTT_SERIAL_OUTPUT */
 
+typedef void (*MQTTCallback)(char*,uint8_t*,unsigned int);
 
 class MQTT {
   /** types */
@@ -131,8 +132,8 @@ class MQTT {
   unsigned long lastOutActivity;
   unsigned long lastInActivity;
   bool pingOutstanding;
-  void (*callback)(char*,uint8_t*,unsigned int);
-  void (*qoscallback)(unsigned int);
+  MQTTCallback callback = NULL;
+  void (*qoscallback)(unsigned int) = NULL;
   uint16_t readPacket(uint8_t*);
   uint8_t readByte();
   bool write(uint8_t header, uint8_t* buf, uint16_t length);
@@ -140,36 +141,20 @@ class MQTT {
   String domain;
   const uint8_t *ip = NULL;
   uint16_t port;
-  int keepalive;
-  uint16_t maxpacketsize;
+  int keepalive = MQTT_DEFAULT_KEEPALIVE;
+  uint16_t maxpacketsize = MQTT_MAX_PACKET_SIZE;
 
-  void initialize(const char* domain, const uint8_t *ip, uint16_t port, int keepalive, void (*callback)(char*,uint8_t*,unsigned int), int maxpacketsize);
   bool publishRelease(uint16_t messageid);
   bool publishComplete(uint16_t messageid);
 
  public:
-  MQTT(){};
-
-  MQTT(const char* domain, uint16_t port, void (*callback)(char*,uint8_t*,unsigned int));
-
-  MQTT(const char* domain, uint16_t port, void (*callback)(char*,uint8_t*,unsigned int), int maxpacketsize);
-
-  MQTT(const uint8_t *ip, uint16_t port, void (*callback)(char*,uint8_t*,unsigned int));
-
-  MQTT(const uint8_t *ip, uint16_t port, void (*callback)(char*,uint8_t*,unsigned int), int maxpacketsize);
-
-  MQTT(const char* domain, uint16_t port, int keepalive, void (*callback)(char*,uint8_t*,unsigned int));
-
-  MQTT(const char* domain, uint16_t port, int keepalive, void (*callback)(char*,uint8_t*,unsigned int), int maxpacketsize);
-
-  MQTT(const uint8_t *ip, uint16_t port, int keepalive, void (*callback)(char*,uint8_t*,unsigned int));
-
-  MQTT(const uint8_t *ip, uint16_t port, int keepalive, void (*callback)(char*,uint8_t*,unsigned int), int maxpacketsize);
-
+  MQTT();
   ~MQTT();
 
-  void setBroker(char* domain, uint16_t port);
-  void setBroker(uint8_t *ip, uint16_t port);
+  void setCallback(MQTTCallback callback);
+  void setMaxPacketSize(int maxpacketsize);
+  void setBroker(const char* domain, uint16_t port);
+  void setBroker(const uint8_t *ip, uint16_t port);
 
   bool connect(const char *id);
   bool connect(const char *id, const char *user, const char *pass);
