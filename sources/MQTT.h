@@ -125,28 +125,6 @@ class MQTT {
     CONN_NOT_AUTHORIZED = 5
   } EMQTT_CONNACK_RESPONSE;
 
- private:
-  TCPClient _client;
-  uint8_t *buffer = NULL;
-  uint16_t nextMsgId;
-  unsigned long lastOutActivity;
-  unsigned long lastInActivity;
-  bool pingOutstanding;
-  MQTTCallback callback = NULL;
-  void (*qoscallback)(unsigned int) = NULL;
-  uint16_t readPacket(uint8_t*);
-  uint8_t readByte();
-  bool write(uint8_t header, uint8_t* buf, uint16_t length);
-  uint16_t writeString(const char* string, uint8_t* buf, uint16_t pos);
-  String domain;
-  const uint8_t *ip = NULL;
-  uint16_t port;
-  int keepalive = MQTT_DEFAULT_KEEPALIVE;
-  uint16_t maxpacketsize = MQTT_MAX_PACKET_SIZE;
-
-  bool publishRelease(uint16_t messageid);
-  bool publishComplete(uint16_t messageid);
-
  public:
   MQTT();
   ~MQTT();
@@ -179,6 +157,28 @@ class MQTT {
   bool unsubscribe(const char *topic);
   bool loop();
   bool isConnected();
+
+ private:
+  uint16_t readPacket(uint8_t*);
+  uint8_t readByte();
+  bool write(uint8_t header, uint8_t* buf, uint16_t length);
+  uint16_t writeString(const char* string, uint8_t* buf, uint16_t pos);
+  bool publishRelease(uint16_t messageid);
+  bool publishComplete(uint16_t messageid);
+
+  TCPClient _client;
+  uint8_t *buffer = NULL;
+  uint16_t nextMsgId;
+  unsigned long lastOutActivity;
+  unsigned long lastInActivity;
+  bool pingOutstanding;
+  MQTTCallback callback = NULL;
+  void (*qoscallback)(unsigned int) = NULL;
+  String domain;
+  const uint8_t *ip = NULL;
+  uint16_t port;
+  int keepalive = MQTT_DEFAULT_KEEPALIVE;
+  uint16_t maxpacketsize = MQTT_MAX_PACKET_SIZE;
 };
 
 #endif  // __MQTT_H_
