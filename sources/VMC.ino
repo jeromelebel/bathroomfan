@@ -36,15 +36,15 @@ String startTime;
 LEDController::PixelColors lastFanSpeedNotification = LEDController::PixelColors::black();
 
 typedef struct {
-  int speed;
   int humidity;
+  int speed;
 } HumidityFanSpeed;
 
 HumidityFanSpeed humidityFanSpeed[] = {
-  {  20,  40 }, //  20% fan speed, at  34% humidity.
-  {  40,  50 }, //  40% fan speed, at  50% humidity.
-  { 100,  80 }, // 100% fan speed, at 80% humidity.
-  { 100, 100 }, // 100% fan speed, at 100% humidity.
+  {  40,  20 }, // for  40% humidity:  20% fan speed.
+  {  50,  40 }, // for  50% humidity:  40% fan speed.
+  {  80, 100 }, // for  80% humidity: 100% fan speed.
+  { 100, 100 }, // for 100% humidity: 100% fan speed.
 };
 const size_t humidityFanSpeedCount = sizeof(humidityFanSpeed) / sizeof(*humidityFanSpeed);
 
