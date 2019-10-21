@@ -6,19 +6,23 @@
 
 #define MQTT_UPDATE_DELAY    (30 * 1000)
 
-MQTTController::MQTTController() : _mqtt(NULL), _lastUpdate(0) {}
+MQTTController::MQTTController() : _mqtt(NULL), _lastUpdate(0), _autoconnect(true), _connectTime(0) {}
 
 MQTTController::~MQTTController() {}
 
 void MQTTController::begin(const char *server, uint16_t port) {
   _mqtt = new MQTT();
   _mqtt->setBroker(server, port);
+  Particle.variable("mqtt", _connectTime);
 }
 
 void MQTTController::loop() {
   if (_mqtt) {
-    if (!_mqtt->isConnected()) {
+    if (!_mqtt->isConnected() && _autoconnect) {
+      unsigned long long startConnectTime = millis();
       _mqtt->connect("vmc");
+      _connectTime = (unsigned long long)(millis() - startConnectTime);
+      _autoconnect = _mqtt->isConnected() && (_connectTime < 500);
       return;
     }
     _mqtt->loop();
