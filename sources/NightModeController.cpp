@@ -23,5 +23,5 @@ bool NightModeController::isNight() const {
   if (Time.hour() > 8 && Time.hour() < 23) {
     return false;
   }
-  return _pirController == NULL || _pirController->getLastHumainDuration() > HumanDurationBeforeNightMode;
+  return _pirController == NULL || _pirController->getLastHumanDuration() > HumanDurationBeforeNightMode;
 }

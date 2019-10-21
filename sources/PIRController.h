@@ -9,11 +9,11 @@ public:
   void begin();
   void loop();
   bool isHumanPresent() const;
-  unsigned long getLastHumainDuration() const;
+  unsigned long getLastHumanDuration() const;
 
 private:
   bool _pir;
-  unsigned long _lastHumainDate;
+  unsigned long _lastHumanDate;
 };
 
 #endif  // PIRController_h

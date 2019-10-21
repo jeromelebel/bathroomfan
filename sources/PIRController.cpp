@@ -4,11 +4,11 @@
 
 #define PIR_PIN D4
 #define LED_PIN D7
-#define HUMAIN_DURATION ((unsigned long)(1000 * 60 * 5))
+#define HUMAN_DURATION ((unsigned long)(1000 * 60 * 5))
 
 PIRController::PIRController() :
     _pir(false),
-    _lastHumainDate(-HUMAIN_DURATION) {
+    _lastHumanDate(-HUMAN_DURATION) {
 }
 
 PIRController::~PIRController() {
@@ -22,7 +22,7 @@ void PIRController::begin() {
 void PIRController::loop() {
   _pir = digitalRead(PIR_PIN);
   if (_pir) {
-    _lastHumainDate = millis();
+    _lastHumanDate = millis();
     digitalWrite(D7, HIGH);
   } else {
     digitalWrite(D7, LOW);
@@ -30,9 +30,9 @@ void PIRController::loop() {
 }
 
 bool PIRController::isHumanPresent() const {
-  return getLastHumainDuration() < HUMAIN_DURATION;
+  return getLastHumanDuration() < HUMAN_DURATION;
 }
 
-unsigned long PIRController::getLastHumainDuration() const {
-  return millis() - _lastHumainDate;
+unsigned long PIRController::getLastHumanDuration() const {
+  return millis() - _lastHumanDate;
 };
