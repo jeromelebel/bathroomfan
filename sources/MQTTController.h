@@ -27,6 +27,5 @@ private:
   std::vector<CallbackTopicPair *> _callbackTopicPairs;
   MQTT *_mqtt;
   unsigned long _lastUpdate;
-  bool _autoconnect;
-  uint32_t _connectTime;
+  unsigned long _lastConnectionFailureDate;
 };

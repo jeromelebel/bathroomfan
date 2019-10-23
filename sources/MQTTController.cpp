@@ -4,25 +4,26 @@
 
 #include "MQTT.h"
 
-#define MQTT_UPDATE_DELAY    (30 * 1000)
+#define MQTT_UPDATE_DELAY         (30 * 1000)
+#define MQTT_AUTO_CONNECT_DELAY   (15 * 60 * 1000)
 
-MQTTController::MQTTController() : _mqtt(NULL), _lastUpdate(0), _autoconnect(true), _connectTime(0) {}
+MQTTController::MQTTController() : _mqtt(NULL), _lastUpdate(0), _lastConnectionFailureDate(0) {}
 
 MQTTController::~MQTTController() {}
 
 void MQTTController::begin(const char *server, uint16_t port) {
+  _lastConnectionFailureDate = millis() - MQTT_AUTO_CONNECT_DELAY;
   _mqtt = new MQTT();
   _mqtt->setBroker(server, port);
-  Particle.variable("mqtt", _connectTime);
 }
 
 void MQTTController::loop() {
   if (_mqtt) {
-    if (!_mqtt->isConnected() && _autoconnect) {
-      unsigned long long startConnectTime = millis();
-      _mqtt->connect("vmc");
-      _connectTime = (unsigned long long)(millis() - startConnectTime);
-      _autoconnect = _mqtt->isConnected() && (_connectTime < 500);
+    if (!_mqtt->isConnected() && ((unsigned long)(millis() - _lastConnectionFailureDate) > MQTT_AUTO_CONNECT_DELAY)) {
+      unsigned long startConnectTime = millis();
+      if (!_mqtt->connect("vmc")) {
+        _lastConnectionFailureDate = millis();
+      }
       return;
     }
     _mqtt->loop();
