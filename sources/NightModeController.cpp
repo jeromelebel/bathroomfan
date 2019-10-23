@@ -4,7 +4,7 @@
 
 #include "PIRController.h"
 
-#define HumanDurationBeforeNightMode  (60 * 3)
+#define HumanDurationBeforeNightMode  (2 * 60 * 1000)
 
 NightModeController::NightModeController() :
     _pirController(NULL) {
