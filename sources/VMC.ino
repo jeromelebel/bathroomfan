@@ -91,9 +91,7 @@ void setFanSpeedForHumidity(double humidity) {
   int previousLevelFanSpeed = humidityFanSpeed[index - 1].speed;
   int fanSpeedDelta = humidityFanSpeed[index].speed - previousLevelFanSpeed;
   int fanSpeed = (humidity - previousLevelHumidity) / humidityDelta * fanSpeedDelta + previousLevelFanSpeed;
-  if (fanController.getFanSpeed() != fanSpeed) {
-    setFanSpeed(fanSpeed);
-  }
+  setFanSpeed(fanSpeed);
 }
 
 void syncTimeIfNeeded() {
