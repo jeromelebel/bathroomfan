@@ -18,24 +18,26 @@ void MQTTController::begin(const char *server, uint16_t port) {
 }
 
 void MQTTController::loop() {
-  if (_mqtt) {
-    if (!_mqtt->isConnected() && ((unsigned long)(millis() - _lastConnectionFailureDate) > MQTT_AUTO_CONNECT_DELAY)) {
-      unsigned long startConnectTime = millis();
-      if (!_mqtt->connect("vmc")) {
-        _lastConnectionFailureDate = millis();
-      }
-      return;
+  if (!_mqtt) {
+    return;
+  }
+  if (!_mqtt->isConnected() && ((unsigned long)(millis() - _lastConnectionFailureDate) > MQTT_AUTO_CONNECT_DELAY)) {
+    unsigned long startConnectTime = millis();
+    if (!_mqtt->connect("vmc")) {
+      _lastConnectionFailureDate = millis();
     }
-    _mqtt->loop();
-    if ((unsigned long)(millis() - _lastUpdate) > MQTT_UPDATE_DELAY) {
-      _lastUpdate = millis();
-      std::vector<CallbackTopicPair*>::iterator it = _callbackTopicPairs.begin();
-      while (it != _callbackTopicPairs.end()) {
-        String value = (*it)->callback((*it)->topic);
-        _mqtt->publish((*it)->topic, value, true);
-        ++it;
-      }
-    }
+    return;
+  }
+  _mqtt->loop();
+  if ((unsigned long)(millis() - _lastUpdate) <= MQTT_UPDATE_DELAY) {
+    return;
+  }
+  _lastUpdate = millis();
+  std::vector<CallbackTopicPair*>::iterator it = _callbackTopicPairs.begin();
+  while (it != _callbackTopicPairs.end()) {
+    String value = (*it)->callback((*it)->topic);
+    _mqtt->publish((*it)->topic, value, true);
+    ++it;
   }
 }
 
