@@ -134,7 +134,7 @@ void setup() {
     mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
   }
   Time.zone(LocalTimeZone);
-  Time.setDSTOffset(DaylightSavingTimeZone);
+  //Time.setDSTOffset(DaylightSavingTimeZone);
   nightModeController.setPIRController(&pirController);
 
   welcomeAnimation();
