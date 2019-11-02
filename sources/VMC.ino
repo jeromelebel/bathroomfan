@@ -12,6 +12,7 @@
 #define ShowTemperatureDelay   5000
 #define MQTTServerPref         "mqtts"
 #define MQTTPortPref           "mqttp"
+#define DSTOffsetPref          "dst"
 #define TempMQTTTopic          "vmc/temp"
 #define HumiMQTTTopic          "vmc/humi"
 #define FanRPMMQTTTopic        "vmc/fan/rpm"
@@ -115,8 +116,10 @@ void setup() {
   nightModeController.begin();
   pirController.begin();
 
-  Particle.function("MQTTServer", setMQTTServer);
-  Particle.function("MQTTPort", setMQTTPort);
+  Particle.function("SetMQTTServer", setMQTTServer);
+  Particle.function("SetMQTTPort", setMQTTPort);
+  Particle.function("SetDST", setDSTOffset);
+  Particle.function("DST", getDSTOffset);
   Particle.function("fanspeed", setFanSpeedOverride);
   Particle.function("test", myTestMethod);
   Particle.variable("loop", loopDuration);
@@ -134,7 +137,9 @@ void setup() {
     mqttController.addTopic(FanSpeedMQTTTopic, valueForTopic);
   }
   Time.zone(LocalTimeZone);
-  //Time.setDSTOffset(DaylightSavingTimeZone);
+  String daylightSavingOffset = preferenceController.valueForKey(DSTOffsetPref);
+  Particle.publish("DSTOffset", daylightSavingOffset, PRIVATE);
+  Time.setDSTOffset(daylightSavingOffset.toInt());
   nightModeController.setPIRController(&pirController);
 
   welcomeAnimation();
@@ -212,6 +217,17 @@ int setMQTTPort(String port) {
   preferenceController.setValueForKey(port, MQTTPortPref);
   preferenceController.save();
   return 1;
+}
+
+int setDSTOffset(String dst) {
+  preferenceController.setValueForKey(dst, DSTOffsetPref);
+  preferenceController.save();
+  Time.setDSTOffset(dst.toInt());
+  return dst.toInt();
+}
+
+int getDSTOffset(String notused) {
+  return Time.getDSTOffset();
 }
 
 int setFanSpeedOverride(String value) {
